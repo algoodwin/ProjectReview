@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Project 2</string>
+    <string name="crAButton"> Create Account</string>
+    <string name="placeButton"> Place Hold</string>
+    <string name="cancelButton"> Cancel Hold</string>
+    <string name="manageButton"> Manage System</string>
+
+
+</resources>
