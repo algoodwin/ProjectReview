@@ -1,11 +1,13 @@
 package edu.good9016csumb.projectreview.Helperobjects;
 
+import android.util.Log;
+
 /**
  * Created by alyssiagoodwin on 5/2/17.
  */
 
 public class User {
-    private String username;
+    public String username;
     private String password;
     private boolean isAdmin;
 
@@ -44,6 +46,8 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+
+
 
     @Override
     public String toString() {

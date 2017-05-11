@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.lang.UScript;
 import android.util.Log;
 import java.util.ArrayList;
 
@@ -20,7 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "library"; // gives it the name of hte database
         private static final int DATABASE_VERSION = 1; //gives it the version (going to have multiple types from the database, like "refreshes" the database
-
         private static final String TABLE_BOOKZ = "books"; //name of the table
 
         //columns in the table
@@ -41,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         /////////////create tables and default data in the onclick/////////
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             String CREATE_BOOK_TABLE = "CREATE TABLE books ( id TEXT, title TEXT, author TEXT, price TEXT)";
-
+            sqLiteDatabase.execSQL(Transactions_Table.CREATE_TRANS_TABLE);
             sqLiteDatabase.execSQL(CREATE_BOOK_TABLE);
             sqLiteDatabase.execSQL(UserTable.CREATE_USER_TABLE); // links it from the UserTbale class
             //Todo: insert the admin stuff here
@@ -52,6 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS books");
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS users");
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS trans");
 
             this.onCreate(sqLiteDatabase);
 
@@ -82,6 +83,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
 
+    public void addTrans(Transactions trans) {
+        Log.d("addTrans", trans.toString());
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Transactions_Table.KEY_TYPE, trans.getType());
+        values.put(Transactions_Table.KEY_USERNAME, trans.getUser());
+        values.put(Transactions_Table.KEY_TITLE, trans.getTitle());
+        values.put(Transactions_Table.KEY_PICKUP, trans.getPickup());
+        values.put(Transactions_Table.KEY_RETURN, trans.getReturndate());
+        values.put(Transactions_Table.KEY_RESERVATION, trans.getReservation());
+
+        db.insert(Transactions_Table.TABLE_TRANS, null, values);
+        db.close();
+    }
+
         public Book getBook(int id) {
             SQLiteDatabase db = this.getReadableDatabase();
 
@@ -105,6 +121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return book;
 
         }
+
+
         ////////GET ALL BOOKS /////
         public ArrayList<Book> getAllBooks() {
             ArrayList<Book> books = new ArrayList<>();
@@ -157,10 +175,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return users;
 
         }
+    //////////////////GET ALL TRANSACTIONS//////////////////
+    public ArrayList<Transactions> getAllTrans() {
+        ArrayList<Transactions> transa = new ArrayList<>();
+        String query = "SELECT * FROM " + Transactions_Table.TABLE_TRANS;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query,null);
+
+        Transactions t = null;
+
+        if(cursor.moveToFirst()) {
+            do {
+                t = new Transactions();
+                t.setType((cursor.getString(0)));
+                t.setUser((cursor.getString(1)));
+                t.setTitle(cursor.getString(2));
+                t.setPickup(cursor.getString(3));
+                t.setReturndate(cursor.getString(4));
+                t.setReservation(cursor.getString(5));
+                transa.add(t);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getAllUsers()", transa.toString());
+
+        return transa;
+
+    }
 
 //Changes the "row" use it for if the book is checkout or nah |||||| check transaction log to see if it checked out or nah
 
-        public int updateBook (Book book) {
+    public int updateBook (Book book) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put("title", book.getTitle());
@@ -189,5 +235,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             Log.d("deleteBook", book.toString());
         }
-    }
+
+
+
+}
 

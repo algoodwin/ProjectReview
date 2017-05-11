@@ -73,21 +73,30 @@ public class CreateAccount extends AppCompatActivity {
         finish(); //Gets back to the main
 
     }
+
     private boolean checkUserInput(String username, String password)
     {
         //// TODO: 5/2/17 check things
-     //   final String STANDARDS ="((?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=])(?=\\\\S+$).{5,}$)";
+      /* final String STANDARDS ="((?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=])(?=\\\\S+$).{5,}$)";
+        // Create a Pattern object with a regex expression
+        Pattern myPattern = Pattern.compile("(?=.*[0-9])(?=.*[!@#$])(?=\\S+$)(?=.*[A-Za-z]{3,})");
+        // Create a matcher object to check.
+        Matcher userisValid, passIsValid;
+        // To check a string:
+        userisValid = myPattern.matcher(username);
+        passIsValid = myPattern.matcher(password);
+        // Check if valid or not.
+        boolean checkUser = userisValid.lookingAt();
+        boolean checkPass = passIsValid.lookingAt();
 
-   //     Pattern patter = Pattern.compile(STANDARDS);
-///        Matcher matcher = Pattern.matcher(password);
+        if(checkUser == true && checkPass == true)
+        {
+            return true;
+        }
 
-
-        //if(user == true && pass == true) {
-        return true;
-          //  Log.d("user", "YAS");
-             // }
-        //else
-          //  return false;
+        else
+            return false;*/
+      return true;
 
     }
 
